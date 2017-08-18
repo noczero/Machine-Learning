@@ -1,0 +1,27 @@
+%%Load data
+aggregation = csvread('Clustering_DataSets/K-means/Aggregation.csv');
+X = aggregation(:,1:2);
+%%Visualize
+scatter(X(:,1),X(:,2),20);
+
+%%makeRandomCentroid
+[numRow , numCol] = size(X);
+k = 7;
+startCentroids = zeros(k,2);
+% Randomly select K examples to be initial centorids
+startCentroids = X(randperm(numRow, k), :);
+
+%% do kMeans
+[ finalCentroids result ] = kMeans( X , startCentroids);
+
+    %% Visualize the centroids
+    label = [1:length(finalCentroids)]';
+   visualize(finalCentroids , label);
+
+
+%% Visualize Result
+visualize(result, result(:,3));
+
+
+
+

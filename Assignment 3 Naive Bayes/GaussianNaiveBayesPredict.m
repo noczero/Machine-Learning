@@ -1,0 +1,40 @@
+function yPredict = GaussianNaiveBayesPredict(X, model)
+%  This function predicts with Naive Bayes classifier for continuous and multi-valued features
+% X is testing data
+% model is result of training
+ 
+    numberClass = length(model{1}); %Number of class
+    S = size(X);
+    N = S(1); % Number of samples
+    D = S(2); % Dimension of each sample
+    L = zeros(N, numberClass); % log(p(x_i|c)*p(c))
+    classPrior = model{1};
+    featureParams = model{2};
+    yPredict = zeros(1, N);
+    
+    for i = 1:N
+        argmax_c = 1;
+        for c = 1:numberClass
+            L(i, c) = log(classPrior(c));
+            for j = 1:D
+                %get data from model
+                att = X(i, j);
+                mean_jc = featureParams(j, c, 1);
+                sqDev_jc = featureParams(j, c, 2);
+               
+                 % Continuous or multi-valued features
+                 diff2 = (att - mean_jc).^2;
+                 logLik = (-0.5*diff2/sqDev_jc) - log(sqrt(sqDev_jc*6.2832));
+                
+                L(i, c) = L(i, c) + logLik;
+            end
+            
+            %Search for max prob from Matix Log
+            if L(i, c) > L(i, argmax_c)
+                argmax_c = c;
+            end
+        end
+        yPredict(i) = argmax_c;
+    end
+    yPredict = yPredict';
+end

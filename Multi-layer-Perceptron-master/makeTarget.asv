@@ -1,0 +1,8 @@
+function binaryLabel = makeTarget(label)
+  binaryLabel = zeros(1,6);
+  if label == 0
+    formatted_label(6) = 1;
+  else
+    formatted_label(label) = 1;
+  end
+end
